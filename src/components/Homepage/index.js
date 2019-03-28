@@ -9,21 +9,31 @@ class Homepage extends Component {
   constructor() {
     super();
     this.state = {
-      posts: []
+      posts: [],
+      loading: true
     }
   }
 
   async componentDidMount() {
-    let _posts = await textsRepository.getTexts();
-    console.log(_posts);
-    this.setState({ posts: _posts });
+      let _posts = await textsRepository.getTexts();
+      console.log(_posts);
+      this.setState({
+        posts: _posts,
+        loading: false
+      });
   }
 
   render() {
-    let { posts } = this.state;
+    let data;
+    if (this.state.loading) {
+      data = <img  src={ require('../../images/loading.gif') } />
+    } else {
+        let { posts } = this.state;
+        data = posts.map((post, i) => <Post marked_text={post} key={i} />)
+    }
     return(
       <div className='Homepage'>
-      {posts.map((post, i) => <Post marked_text={post} key={i} />)}
+        {data}
       </div>
     );
   }
