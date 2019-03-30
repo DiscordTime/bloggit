@@ -29,7 +29,7 @@ class Homepage extends Component {
       data = <img  src={ require('../../res/images/loading.gif') } />
     } else {
         let { posts } = this.state;
-        data = posts.map((post, i) => <Post marked_text={post.markdown} key={i} />)
+        data = posts.map((post, i) => <Post {...post} key={i} />)
     }
     return(
       <div className='Homepage'>
