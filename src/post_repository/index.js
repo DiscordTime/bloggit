@@ -12,8 +12,8 @@ function throwException(message) {
     throw { name: "Exception", message: message }
 }
 
-class TextsRepository {
-  getTexts() {
+class PostRepository {
+  getPosts() {
     return new Promise((resolve, reject) => {
       throwIfIsNotRendererProcess()
 
@@ -29,4 +29,4 @@ class TextsRepository {
   }
 }
 
-export default TextsRepository
+export default PostRepository

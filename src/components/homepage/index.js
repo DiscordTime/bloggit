@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './Homepage.css';
 import Post from '../post'
-import TextsRepository from '../../texts_repository'
+import PostRepository from '../../post_repository'
 
-let textsRepository = new TextsRepository();
+let postRepository = new PostRepository()
 
 class Homepage extends Component {
   constructor() {
@@ -15,7 +15,7 @@ class Homepage extends Component {
   }
 
   async componentDidMount() {
-      let _posts = await textsRepository.getTexts();
+      let _posts = await postRepository.getPosts()
       console.log(_posts);
       this.setState({
         posts: _posts,
@@ -29,7 +29,7 @@ class Homepage extends Component {
       data = <img  src={ require('../../res/images/loading.gif') } />
     } else {
         let { posts } = this.state;
-        data = posts.map((post, i) => <Post marked_text={post} key={i} />)
+        data = posts.map((post, i) => <Post marked_text={post.markdown} key={i} />)
     }
     return(
       <div className='Homepage'>
