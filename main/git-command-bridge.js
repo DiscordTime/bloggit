@@ -23,8 +23,12 @@ class GitCommandBridge {
     return git.raw(['ls-files'])
   }
 
+  async logFile(file) {
+    return git.silent(true).log({'file': file})
+  }
+
   async showFile(file) {
-      return git.silent(true).show('HEAD:' + file)
+    return git.silent(true).show('HEAD:' + file)
   }
 
   async cloneOrPull() {
@@ -36,16 +40,29 @@ class GitCommandBridge {
     }
   }
 
+  mapFilePathToFullObject(filePath) {
+    return Promise.all([
+          this.showFile(filePath),
+          this.logFile(filePath)
+        ])
+        .then(values => {
+          return Object.assign(
+            {markdown: values[0]},
+            values[1].latest)
+        })
+  }
+
   async listMdFiles(event) {
 
     try {
       await this.cloneOrPull()
       let files = await this.listFiles()
-      let filesContentPromises = files.split("\n")
+      let filesPromises = files.split("\n")
         .filter(value => value != '')
-        .map(value => this.showFile(value));
+        .map(value => this.mapFilePathToFullObject(value))
 
-      let results = await Promise.all(filesContentPromises)
+      let results = await Promise.all(filesPromises)
+      results = results.map(i => i.markdown)
       event.sender.send(ACTION_LIST_MD_FILES_DONE, results)
 
     } catch (e) {
