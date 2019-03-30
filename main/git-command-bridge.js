@@ -62,6 +62,7 @@ class GitCommandBridge {
         .map(value => this.mapFilePathToFullObject(value))
 
       let results = await Promise.all(filesPromises)
+      results.forEach(i => console.log(i))
       event.sender.send(ACTION_LIST_MD_FILES_DONE, results)
 
     } catch (e) {

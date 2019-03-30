@@ -1,3 +1,23 @@
-.Post {
-    text-align: center;
+.post {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 3vw;
+    justify-content: center;
+}
+
+.post section {
+    flex: 0 1 auto;
+    box-sizing: border-box;
+    background: hsla(0,0%,100%,.9);
+    border: .1rem solid #e1e4e8 /*hsla(0,0%,100%,.9);*/
+}
+
+.post_content {
+    overflow: auto;
+    padding: 4vw;
+}
+
+.post_content h1, .post_content h2 {
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: .3em;
 }

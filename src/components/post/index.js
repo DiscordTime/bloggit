@@ -4,10 +4,19 @@ import ReactMarkdown from 'react-markdown';
 
 class Post extends Component {
   render() {
+    let date = new Date(this.props.date)
     return (
-      <div className="Post">
-      <ReactMarkdown source={this.props.marked_text} />
-      </div>
+      <article className="post">
+        <section>
+        <div className="post_content">
+          <ReactMarkdown source={this.props.markdown} />
+        </div>
+        <blockquote>
+          <address>{this.props.author_name}</address>
+          <time>{date.toLocaleDateString()}</time>
+        </blockquote>
+        </section>
+      </article>
     );
   }
 }
