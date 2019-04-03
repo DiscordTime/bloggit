@@ -13,19 +13,17 @@ function throwException(message) {
 }
 
 class PostRepository {
-  getPosts() {
-    return new Promise((resolve, reject) => {
-      throwIfIsNotRendererProcess()
 
-      ipcRenderer.send(ACTION_LIST_MD_FILES)
+  bindNewPostListener(addNewPost) {
+    this._addNewPost = (event, post) => {
+      addNewPost(post)
+    }
+  }
 
-      const onDoneListFiles = (event, files) => {
-        ipcRenderer.removeAllListeners(ACTION_LIST_MD_FILES_DONE)
-        resolve(files)
-      }
-
-      ipcRenderer.on(ACTION_LIST_MD_FILES_DONE, onDoneListFiles)
-    })
+  fetch() {
+    throwIfIsNotRendererProcess()
+    ipcRenderer.send(ACTION_LIST_MD_FILES)
+    ipcRenderer.on(ACTION_LIST_MD_FILES_DONE, this._addNewPost)
   }
 }
 

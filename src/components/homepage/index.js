@@ -14,13 +14,16 @@ class Homepage extends Component {
     }
   }
 
+  addNewPost(post) {
+    this.setState(prevState => ({
+      posts: [...prevState.posts, post],
+      loading: false
+    }))
+  }
+
   async componentDidMount() {
-      let _posts = await postRepository.getPosts()
-      console.log(_posts);
-      this.setState({
-        posts: _posts,
-        loading: false
-      });
+      postRepository.bindNewPostListener(this.addNewPost.bind(this))
+      postRepository.fetch()
   }
 
   render() {
