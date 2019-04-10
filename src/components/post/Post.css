@@ -3,9 +3,11 @@
     align-items: flex-start;
     margin-bottom: 3vw;
     justify-content: center;
+    width: 100vw;
 }
 
 .post section {
+    width: 90vw;
     flex: 0 1 auto;
     box-sizing: border-box;
     background: hsla(0,0%,100%,.9);
@@ -15,6 +17,7 @@
 .post_content {
     overflow: auto;
     padding: 4vw;
+    text-align: left;
 }
 
 .post_content h1, .post_content h2 {
