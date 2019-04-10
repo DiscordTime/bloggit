@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Post.css';
 import ReactMarkdown from 'react-markdown';
+import Code from './code'
 
 class Post extends Component {
 
@@ -17,7 +18,11 @@ class Post extends Component {
       <article className="post">
         <section>
         <div className="post_content">
-          <ReactMarkdown source={this.props.markdown} transformImageUri={this.transformImageUri} />
+          <ReactMarkdown
+            source={this.props.markdown}
+            /*transformImageUri={this.transformImageUri}*/
+            escapeHtml={false}
+            renderers={{code: Code}} />
         </div>
         <blockquote>
           <address>{this.props.author_name}</address>

@@ -21,7 +21,7 @@ class Homepage extends Component {
     }))
   }
 
-  async componentDidMount() {
+  componentDidMount() {
       postRepository.bindNewPostListener(this.addNewPost.bind(this))
       postRepository.fetch()
   }
