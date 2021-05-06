@@ -1,12 +1,10 @@
 package repository
 
 import data.Post
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
+import datasource.DataSource
 
-class PostsRepositoryImpl: PostsRepository<Post> {
-    override fun getPosts(): Flow<Post> {
-        TODO("Not yet implemented")
-    }
+class PostsRepositoryImpl(private val dataSource: DataSource<Post>): PostsRepository<Post> {
+
+    override fun getPosts() = dataSource.geData()
 
 }
