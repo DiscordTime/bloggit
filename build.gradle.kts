@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC")
     implementation(compose.desktop.currentOs)
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.11.0.202103091610-r")
     testImplementation(kotlin("test-junit"))
 }
 
