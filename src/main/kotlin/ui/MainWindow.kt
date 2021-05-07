@@ -7,22 +7,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import data.Post
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import repository.PostsRepository
+import repository.Repository
 
-class MainWindow(private val title: String, private val theme: Colors, postsRepository: PostsRepository<Post>) {
-
-    private val posts = postsRepository.getPosts()
+@Suppress("FunctionName")
+class MainWindow(
+    private val title: String,
+    private val theme: Colors
+) {
 
     @Composable
-    fun postItem(post: Post) {
+    fun PostItem(post: Post) {
         val id = post.id
         val text = post.text
         Card(
@@ -39,20 +46,27 @@ class MainWindow(private val title: String, private val theme: Colors, postsRepo
     }
 
     @Composable
-    fun listOfPosts(posts: List<Post>) {
-        val postList = remember { mutableStateListOf(posts) }
+    fun <T> ItemList(
+        itemList: List<T>,
+        modifier: Modifier = Modifier.fillMaxSize().background(theme.background),
+        horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+        dividerThickness: Dp = 2.dp,
+        dividerColor: Color = theme.secondary,
+        content: @Composable (T) -> Unit
+    ) {
+        val itemListState = remember { mutableStateListOf(itemList) }
         Box(
-            modifier = Modifier.fillMaxSize().background(theme.background),
+            modifier = modifier,
         ) {
             val listState = rememberLazyListState()
             LazyColumn(
                 state = listState,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = horizontalAlignment
             ) {
-                items(postList) { list ->
-                    list.forEach { post ->
-                        Divider(Modifier.fillMaxWidth(), thickness = 2.dp, color = theme.secondary)
-                        postItem(post)
+                items(itemListState) { list ->
+                    list.forEach { item ->
+                        Divider(Modifier.fillMaxWidth(), thickness = dividerThickness, color = dividerColor)
+                        content(item)
                     }
                 }
             }
@@ -60,18 +74,21 @@ class MainWindow(private val title: String, private val theme: Colors, postsRepo
     }
 
     @Composable
-    fun content() {
-        val postList = remember { mutableStateListOf<Post>() }
+    fun <T> Content(
+        repo: Repository<T>,
+        content: @Composable (List<T>) -> Unit
+    ) {
+        val list = remember { mutableStateListOf<T>() }
         LaunchedEffect(Unit) {
-            posts.onEach {
-                postList.add(it)
+            repo.data.onEach {
+                list.add(it)
             }.launchIn(this)
         }
-        listOfPosts(postList)
+        content(list)
     }
 
     @Composable
-    fun topBar(title: String) {
+    fun TopBar(title: String) {
         TopAppBar(
             title = { Text(title) },
             actions = {
@@ -84,11 +101,21 @@ class MainWindow(private val title: String, private val theme: Colors, postsRepo
         )
     }
 
-    fun mainWindow() = Window (title = title) {
+    fun mainWindow(
+        postsRepo: PostsRepository,
+        onDismissRequest: () -> Unit
+    ) = Window (
+        title = title,
+        onDismissRequest = { onDismissRequest() }
+    ) {
         MaterialTheme(theme) {
             Column(modifier = Modifier.fillMaxSize()) {
-                topBar(title)
-                content()
+                TopBar(title)
+                Content(postsRepo) { posts ->
+                    ItemList(posts) {
+                        PostItem(it)
+                    }
+                }
             }
         }
     }

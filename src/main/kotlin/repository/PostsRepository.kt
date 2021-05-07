@@ -1,8 +1,5 @@
 package repository
 
-import kotlinx.coroutines.flow.Flow
+import data.Post
 
-interface PostsRepository<T> {
-
-    fun getPosts(): Flow<T>
-}
+interface PostsRepository : Repository<Post>, AutoCloseable

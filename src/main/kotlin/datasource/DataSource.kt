@@ -2,8 +2,7 @@ package datasource
 
 import kotlinx.coroutines.flow.Flow
 
-interface DataSource<T> {
+interface DataSource<T> : AutoCloseable {
 
-    fun geData() : Flow<T>
-
+    val data : Flow<T>
 }

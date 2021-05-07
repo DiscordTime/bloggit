@@ -3,8 +3,14 @@ package repository
 import data.Post
 import datasource.DataSource
 
-class PostsRepositoryImpl(private val dataSource: DataSource<Post>): PostsRepository<Post> {
+class PostsRepositoryImpl(
+    private val dataSource: DataSource<Post>
+) : PostsRepository {
 
-    override fun getPosts() = dataSource.geData()
+    override val data get() = dataSource.data
 
+    override fun close() {
+        dataSource.close()
+        println("PostsRepositoryImpl $this closed")
+    }
 }
